@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head><title>ZenHub</title></head>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+      opacity: 1;
+      font-family: Roboto, Helvetica, sans-serif;
+      color: rgb(85, 77, 86);
+      font-size: 24px;
+      font-weight: 300;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      transition: opacity .5s ease-out;
+      pointer-events: none;
+      background: #fff;
+    }
+    #zenhub {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
+    }
+  </style>
+  <script>
+    const { shell } = require("electron");
+    
+    onload = () => {
+      const webview = document.querySelector("webview");
+      webview.addEventListener("dom-ready", (e) => {
+        document.querySelector(".loader").style.opacity = 0;
+        webview.focus();
+        webview.addEventListener("new-window", (e) => {
+          if (e.url.indexOf("http:") === 0 || e.url.indexOf("https:") === 0) {
+            shell.openExternal(e.url);
+          }
+        });
+      });
+
+      
+    }
+    </script>
+  <body>
+    <div class="loader">
+      <img src="Zenhub.svg" width="150" height="120" />
+      <span style="margin-top: 24px;"1>
+        Loading...
+      </span>
+    </div>
+    <webview id="zenhub" src="https://app.zenhub.com"></webview>
+  </body>
+</html>
