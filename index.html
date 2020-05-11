@@ -36,10 +36,12 @@
     }
   </style>
   <script>
-    const { shell } = require("electron");
-    
+    const { shell, remote, clipboard } = require("electron");
+    const { Menu, MenuItem } = remote;
+   
     onload = () => {
       const webview = document.querySelector("webview");
+      
       webview.addEventListener("dom-ready", (e) => {
         document.querySelector(".loader").style.opacity = 0;
         webview.focus();
@@ -48,9 +50,22 @@
             shell.openExternal(e.url);
           }
         });
-      });
 
-      
+        const menu = new Menu();
+        let currentDOMNode = null;
+        
+        menu.append(new MenuItem ({
+          label: "Copy current URL",
+          click(e) {
+            clipboard.writeText(webview.getURL());
+          }
+        }));
+
+        webview.addEventListener("context-menu", (e) => {
+          e.preventDefault();
+          menu.popup(remote.getCurrentWindow());
+        }, false);
+      });
     }
     </script>
   <body>
